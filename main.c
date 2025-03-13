@@ -57,6 +57,12 @@ void render_tile(Tile tile) {
   DrawTexturePro(tiles_atlas_texture, source, dest, origin, rotation, color);
 }
 
+typedef enum {
+  MAIN_SCREEN,
+  PLAYING,
+  GAME_OVER,
+} GameState;
+
 int main() {
   SetTraceLogLevel(LOG_WARNING);
 
@@ -68,6 +74,7 @@ int main() {
   tiles_atlas_texture = LoadTexture("../assets/tiles_packed.png");
 
   Player player = {0, -(HALF_WINDOW_HEIGHT / 2)};
+  GameState game_state = MAIN_SCREEN;
 
   for(int col = 0; col < COLS; col++) {
     for(int row = 0; row < ROWS; row++) {
@@ -81,10 +88,11 @@ int main() {
     float dt = GetFrameTime();
 
     int player_speed = 450;
-    if(IsKeyDown(KEY_W)) player.position.y += player_speed * dt;
-    if(IsKeyDown(KEY_A)) player.position.x -= player_speed * dt;
-    if(IsKeyDown(KEY_S)) player.position.y -= player_speed * dt;
-    if(IsKeyDown(KEY_D)) player.position.x += player_speed * dt;
+    if(IsKeyDown(KEY_W) && game_state == PLAYING) player.position.y += player_speed * dt;
+    if(IsKeyDown(KEY_A) && game_state == PLAYING) player.position.x -= player_speed * dt;
+    if(IsKeyDown(KEY_S) && game_state == PLAYING) player.position.y -= player_speed * dt;
+    if(IsKeyDown(KEY_D) && game_state == PLAYING) player.position.x += player_speed * dt;
+    if(IsKeyPressed(KEY_ENTER) && game_state == MAIN_SCREEN) game_state = PLAYING;
 
     for(int col = 0; col < COLS; col++) {
       for(int row = 0; row < ROWS; row++) {
@@ -114,7 +122,7 @@ int main() {
     int font_size = 40;
     int press_start_text_width = MeasureText(press_start_text, font_size);
     Vector2 press_start_text_position = {HALF_WINDOW_WIDTH - (press_start_text_width / 2), HALF_WINDOW_HEIGHT};
-    if(!press_start_blink_state) {
+    if(!press_start_blink_state && game_state == MAIN_SCREEN) {
       DrawText(press_start_text, press_start_text_position.x + 2, press_start_text_position.y + 3, font_size, BLACK);
       DrawText(press_start_text, press_start_text_position.x + 0, press_start_text_position.y + 0, font_size, MAROON);
     }
