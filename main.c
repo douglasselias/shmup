@@ -58,10 +58,6 @@ void render_tile(Tile tile) {
 }
 
 int main() {
-  // printf("Cols: %.2f\n", (float)WINDOW_WIDTH  / TILE_SIZE_TARGET);
-  // printf("COLS: %.2f\n", (float)COLS);
-  // printf("Rows: %.2f\n", (float)WINDOW_HEIGHT / TILE_SIZE_TARGET);
-  // printf("ROWS: %.2f\n", (float)ROWS);
   SetTraceLogLevel(LOG_WARNING);
 
   SetConfigFlags(FLAG_WINDOW_UNDECORATED);
@@ -71,7 +67,7 @@ int main() {
   ships_atlas_texture = LoadTexture("../assets/ships_packed.png");
   tiles_atlas_texture = LoadTexture("../assets/tiles_packed.png");
 
-  Player player = {};
+  Player player = {0, -(HALF_WINDOW_HEIGHT / 2)};
 
   for(int col = 0; col < COLS; col++) {
     for(int row = 0; row < ROWS; row++) {
@@ -106,14 +102,28 @@ int main() {
         Tile tile = background_tiles[col][row];
         render_tile(tile);
         Vector2 screen_position = cartesian_to_screen(tile.position);
-        // DrawRectangleLinesEx((Rectangle){screen_position.x - ATLAS_TILE_SIZE, screen_position.y - ATLAS_TILE_SIZE, TILE_SIZE_TARGET, TILE_SIZE_TARGET}, 2, RED);
       }
     }
 
     render_player(player);
 
-    // DrawLineV((Vector2){HALF_WINDOW_WIDTH, 0},  (Vector2){HALF_WINDOW_WIDTH, WINDOW_HEIGHT}, RED);
-    // DrawLineV((Vector2){0, HALF_WINDOW_HEIGHT}, (Vector2){WINDOW_WIDTH, HALF_WINDOW_HEIGHT}, RED);
+
+    static bool press_start_blink_state = false;
+    static float current_frame = 0;
+    const char* press_start_text = "Press Start";
+    int font_size = 40;
+    int press_start_text_width = MeasureText(press_start_text, font_size);
+    Vector2 press_start_text_position = {HALF_WINDOW_WIDTH - (press_start_text_width / 2), HALF_WINDOW_HEIGHT};
+    if(!press_start_blink_state) {
+      DrawText(press_start_text, press_start_text_position.x + 2, press_start_text_position.y + 3, font_size, BLACK);
+      DrawText(press_start_text, press_start_text_position.x + 0, press_start_text_position.y + 0, font_size, MAROON);
+    }
+    current_frame += dt;
+
+    if(current_frame >= 0.6) {
+      current_frame = 0;
+      press_start_blink_state = !press_start_blink_state;
+    }
 
     EndDrawing();
   }
