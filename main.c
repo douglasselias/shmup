@@ -21,10 +21,11 @@ typedef enum {
 
 int main() {
   init_window();
+  init_anti_alias();
   init_map();
   init_tiles();
   init_ships();
-  init_anti_alias();
+  init_enemies();
   init_player();
 
   GameState game_state = MAIN_SCREEN;
@@ -53,7 +54,7 @@ int main() {
       }
     }
 
-    if(!paused) {
+    if(!paused && game_state == PLAYING) {
       update_map(dt);
       update_bullets(dt);
       update_enemies(dt);
@@ -68,6 +69,7 @@ int main() {
 
           if(CheckCollisionRecs(enemy_rect, bullet_rect)) {
             enemies[enemy_index].alive = false;
+            enemies[enemy_index].position.y = HALF_WINDOW_HEIGHT + 100;
             bullets[bullet_index].position.y = HALF_WINDOW_HEIGHT + 100;
           }
         }

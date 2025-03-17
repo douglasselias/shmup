@@ -14,6 +14,9 @@ int bullet_insertion_index = 0;
 
 void init_player() {
   player.position = (Vector2){0, -(HALF_WINDOW_HEIGHT / 2)};
+  for(int i = 0; i < TOTAL_BULLETS; i++) {
+    bullets[i].position.y = WINDOW_HEIGHT;
+  }
 }
 
 void input_player(float dt) {
