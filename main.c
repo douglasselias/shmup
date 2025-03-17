@@ -9,8 +9,8 @@
 #include "src/ships.c"
 #include "src/anti_alias.c"
 #include "src/map.c"
-#include "src/enemies.c"
 #include "src/player.c"
+#include "src/enemies.c"
 #include "src/main_menu.c"
 
 typedef enum {
@@ -93,6 +93,7 @@ int main() {
         begin_anti_alias();
         render_map();
         render_enemies();
+        render_enemy_bullets();
         render_bullets();
         render_player();
         end_anti_alias();
