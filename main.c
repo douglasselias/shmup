@@ -129,100 +129,109 @@ TileType get_tile_type_from_atlas_coord(int x, int y) {
   return GRASS;
 }
 
-TileType simpler_random_tile() {
-  TileType allowed_tile_types[] = {
-    // PLANT,
-    // PLANT,
-    // PLANT,
-    // PLANT,
-    // PLANT,
-    // PLANT,
-    // PLANT,
-    // PLANT,
-    // PLANT,
-    PLANT,
-    PLANT,
-    SINGLE_TREE,
-    SINGLE_TREE,
-    SINGLE_TREE,
-    COUPLE_TREE,
-    COUPLE_TREE,
-    COUPLE_TREE,
-    // HOUSE,
-    // TENT,
-    // FLAG,
-    // LAMP_POST,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-    GRASS,
-  };
-  int size = sizeof(allowed_tile_types) / sizeof(allowed_tile_types[0]);
-  int random_index = GetRandomValue(0, size - 1);
-  return allowed_tile_types[random_index];
-}
+// TileType simpler_random_tile() {
+//   TileType allowed_tile_types[] = {
+//     // PLANT,
+//     // PLANT,
+//     // PLANT,
+//     // PLANT,
+//     // PLANT,
+//     // PLANT,
+//     // PLANT,
+//     // PLANT,
+//     // PLANT,
+//     PLANT,
+//     PLANT,
+//     SINGLE_TREE,
+//     SINGLE_TREE,
+//     SINGLE_TREE,
+//     COUPLE_TREE,
+//     COUPLE_TREE,
+//     COUPLE_TREE,
+//     // HOUSE,
+//     // TENT,
+//     // FLAG,
+//     // LAMP_POST,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//     GRASS,
+//   };
+//   int size = sizeof(allowed_tile_types) / sizeof(allowed_tile_types[0]);
+//   int random_index = GetRandomValue(0, size - 1);
+//   return allowed_tile_types[random_index];
+// }
 
-void init_tiles() {
-  for(int row = 0; row < ROWS; row++) {
-    for(int col = 0; col < COLS; col++) {
-      Tile* tile = &background_tiles[row][col];
-      TileType random_type = simpler_random_tile();
-      tile->atlas_coord = get_atlas_coord_from_tile_type(random_type);
-      float half_width_offset = TILE_SIZE_TARGET * ((COLS / 2) - (EXTRA_COLS_TO_FILL_SCREEN / 2));
-      tile->position = (Vector2){-half_width_offset + col * TILE_SIZE_TARGET, row * TILE_SIZE_TARGET};
-    }
-  }
-}
+// void init_tiles() {
+//   for(int row = 0; row < ROWS; row++) {
+//     for(int col = 0; col < COLS; col++) {
+//       Tile* tile = &background_tiles[row][col];
+//       TileType random_type = simpler_random_tile();
+//       tile->atlas_coord = get_atlas_coord_from_tile_type(random_type);
+//       float half_width_offset = TILE_SIZE_TARGET * ((COLS / 2) - (EXTRA_COLS_TO_FILL_SCREEN / 2));
+//       tile->position = (Vector2){-half_width_offset + col * TILE_SIZE_TARGET, (float)row * TILE_SIZE_TARGET};
+//     }
+//   }
+// }
 
 int main() {
   init_window();
   init_player();
 
   tiles_atlas_texture = LoadTexture("../assets/tiles_packed.png");
-  init_tiles();
+  // init_tiles();
 
   GameState game_state = EDITOR;
+  Texture2D map = LoadTexture("../assets/map.png");
+  float map_scale = 1.88f;
+  float scaled_map_height = map.height * map_scale;
+  float y1 = WINDOW_HEIGHT - scaled_map_height;
+  float y2 = y1 - scaled_map_height;
+  bool paused = false;
+  // printf("Y1: %.2f\n", y1);
+  // printf("WH: %d\n", WINDOW_HEIGHT);
+  // printf("MH: %.2f\n", scaled_map_height);
 
   while(!WindowShouldClose()) {
     float dt = GetFrameTime();
@@ -241,13 +250,28 @@ int main() {
       }
       case EDITOR: {
         if(IsKeyPressed(KEY_SPACE)) {
-         save_bg_to_file();
+        //  save_bg_to_file();
+        paused = !paused;
         }
         if(IsKeyPressed(KEY_ONE)) {
           is_editor = !is_editor;
         }
         break;
       }
+    }
+
+    if(!paused) {
+      float map_speed = 700;
+      y1 += map_speed * dt;
+      y2 += map_speed * dt;
+    }
+
+    if(y1 >= (WINDOW_HEIGHT + scaled_map_height - (scaled_map_height - WINDOW_HEIGHT))) {
+      y1 = -scaled_map_height;
+    }
+
+    if(y2 >= (WINDOW_HEIGHT + scaled_map_height - (scaled_map_height - WINDOW_HEIGHT))) {
+      y2 = -scaled_map_height;
     }
 
     BeginDrawing();
@@ -267,11 +291,14 @@ int main() {
         break;
       }
       case EDITOR: {
-        draw_editor();
+        // draw_editor();
         break;
       }
     }
 
+    // DrawTexture(map, 0, 0, WHITE);
+    DrawTextureEx(map, (Vector2){0, y1}, 0, map_scale, WHITE);
+    DrawTextureEx(map, (Vector2){0, y2}, 0, map_scale, WHITE);
     EndDrawing();
 
     update_frame(dt);

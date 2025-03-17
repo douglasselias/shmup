@@ -6,9 +6,9 @@ void draw_main_menu() {
     const char* press_start_text = "Press Start";
     int font_size = 40;
     int press_start_text_width = MeasureText(press_start_text, font_size);
-    Vector2 press_start_text_position = {HALF_WINDOW_WIDTH - (press_start_text_width / 2), HALF_WINDOW_HEIGHT};
-    DrawText(press_start_text, press_start_text_position.x + 2, press_start_text_position.y + 3, font_size, BLACK);
-    DrawText(press_start_text, press_start_text_position.x + 0, press_start_text_position.y + 0, font_size, MAROON);
+    Vector2 press_start_text_position = {HALF_WINDOW_WIDTH - (float)(press_start_text_width / 2), HALF_WINDOW_HEIGHT};
+    DrawText(press_start_text, (int)press_start_text_position.x + 2, (int)press_start_text_position.y + 3, font_size, BLACK);
+    DrawText(press_start_text, (int)press_start_text_position.x, (int)press_start_text_position.y, font_size, MAROON);
   }
 }
 

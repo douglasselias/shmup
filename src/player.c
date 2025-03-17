@@ -26,7 +26,7 @@ void input_player(float dt) {
 
 void render_player() {
   int x = 1, y = 2;
-  Rectangle source = {x * ATLAS_SHIP_SIZE, y * ATLAS_SHIP_SIZE, ATLAS_SHIP_SIZE, ATLAS_SHIP_SIZE};
+  Rectangle source = {(float)x * ATLAS_SHIP_SIZE, (float)y * ATLAS_SHIP_SIZE, ATLAS_SHIP_SIZE, ATLAS_SHIP_SIZE};
   Vector2 position = cartesian_to_screen(player.position);
   Rectangle dest = {position.x, position.y, SHIP_SIZE_TARGET, SHIP_SIZE_TARGET};
   Vector2 origin = {SHIP_SIZE_TARGET/2, SHIP_SIZE_TARGET/2};

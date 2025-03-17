@@ -130,7 +130,7 @@ void draw_source_tilemap() {
 
   for(int row = 0; row < 10; row++) {
     for(int col = 0; col < 12; col++) {
-      Rectangle source = {col * ATLAS_TILE_SIZE, row * ATLAS_TILE_SIZE, ATLAS_TILE_SIZE, ATLAS_TILE_SIZE};
+      Rectangle source = {(float)col * ATLAS_TILE_SIZE, (float)row * ATLAS_TILE_SIZE, ATLAS_TILE_SIZE, ATLAS_TILE_SIZE};
       Rectangle dest = {col * TILE_SIZE_TARGET*scale_factor, row * TILE_SIZE_TARGET*scale_factor, TILE_SIZE_TARGET*scale_factor, TILE_SIZE_TARGET*scale_factor};
       DrawTexturePro(tiles_atlas_texture, source, dest, origin, rotation, color);
     }
@@ -165,16 +165,16 @@ void draw_editor() {
     };
     DrawRectangleRec(mouse_rect, Fade(BLUE, 0.35f));
     DrawRectangleLinesEx(mouse_rect, 2, Fade(BLUE, 0.8f));
-    printf("POS:: X: %.2f, Y: %.2f\n", mouse_position.x, mouse_position.y);
-    printf("REC:: X: %.2f, Y: %.2f\n", mouse_rect.x, mouse_rect.y);
+    // printf("POS:: X: %.2f, Y: %.2f\n", mouse_position.x, mouse_position.y);
+    // printf("REC:: X: %.2f, Y: %.2f\n", mouse_rect.x, mouse_rect.y);
 
     for(int row = 0; row < 10; row++) {
       for(int col = 0; col < 12; col++) {
-        int x = col * TILE_SIZE_TARGET * scale_factor;
-        DrawLine(x, 0, x, WINDOW_HEIGHT, MAGENTA);
+        float x = col * TILE_SIZE_TARGET * scale_factor;
+        DrawLineV((Vector2){x, 0}, (Vector2){x, WINDOW_HEIGHT}, MAGENTA);
       }
-      int y = row * TILE_SIZE_TARGET * scale_factor;
-      DrawLine(0, y, WINDOW_WIDTH, y, MAGENTA);
+      float y = row * TILE_SIZE_TARGET * scale_factor;
+      DrawLineV((Vector2){0, y}, (Vector2){WINDOW_WIDTH, y}, MAGENTA);
     }
   }
 }
