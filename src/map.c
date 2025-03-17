@@ -18,11 +18,13 @@ void update_map(float dt) {
   map_y2 += map_speed * dt;
 
   if(map_y1 >= (WINDOW_HEIGHT + scaled_map_height - (scaled_map_height - WINDOW_HEIGHT))) {
-    map_y1 = -scaled_map_height;
+    // Added 2 to fix some weird 1 pixel gap between maps.
+    map_y1 = -scaled_map_height + 2;
   }
 
   if(map_y2 >= (WINDOW_HEIGHT + scaled_map_height - (scaled_map_height - WINDOW_HEIGHT))) {
-    map_y2 = -scaled_map_height;
+    // Added 2 to fix some weird 1 pixel gap between maps.
+    map_y2 = -scaled_map_height + 2;
   }
 }
 
